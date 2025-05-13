@@ -2,10 +2,10 @@ package com.syncronizarworkspace.mvc.views;
 
 import javax.swing.JFrame;
 
-public class Marco extends JFrame {
+public class PrincipalView extends JFrame {
   public LaminaPrincipal principal;
 
-  public Marco() {
+  public PrincipalView() {
     setTitle("Syncronizar Workspaces");
     setBounds(450, 350, 550, 500);
     principal = new LaminaPrincipal();

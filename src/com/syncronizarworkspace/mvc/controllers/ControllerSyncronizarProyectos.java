@@ -9,27 +9,27 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import com.syncronizarworkspace.mvc.views.Marco;
+import com.syncronizarworkspace.mvc.views.PrincipalView;
 import com.syncronizarworkspace.utilidades.Datos;
 
 public class ControllerSyncronizarProyectos {
-  private Marco marco;
+  private PrincipalView v;
   private String urlDoom, urlEclipse, nombre_proyecto;
 
   public ControllerSyncronizarProyectos() {
-    marco = new Marco();
+    v = new PrincipalView();
     urlDoom = urlEclipse = "";
   }
 
   public void init() {
-    marco.init();
-    marco.principal.btn_doom_eclipse.addActionListener(e -> iniciarSync(marco.principal.campos.get(1).getText()));
-    marco.principal.btn_eclipse_doom.addActionListener(e -> iniciarSync(marco.principal.campos.get(0).getText()));
+    v.init();
+    v.principal.btn_doom_eclipse.addActionListener(e -> iniciarSync(v.principal.campos.get(1).getText()));
+    v.principal.btn_eclipse_doom.addActionListener(e -> iniciarSync(v.principal.campos.get(0).getText()));
   }
 
   private void iniciarSync(String url) {
-    urlDoom = marco.principal.campos.get(1).getText();
-    urlEclipse = marco.principal.campos.get(0).getText();
+    urlDoom = v.principal.campos.get(1).getText();
+    urlEclipse = v.principal.campos.get(0).getText();
 
     if (url.equals(urlDoom)) {
       crearProyecto(url, urlEclipse);
@@ -160,17 +160,17 @@ public class ControllerSyncronizarProyectos {
     Datos.escribirDatos(mydata, url + "/src/com/" + nombre_proyecto.toLowerCase() + "/init/Main.java");
 
     /* Escribir template controller de nombre cambiante */
-    url_origen = "bin/recursos/template/ControllerSyncronizarProyectos.java";
+    url_origen = "bin/recursos/template/ControllerProyectos.java";
     mydata = Datos.leerData(url_origen);
     mydata = mydata.replaceAll(modificar, nombre_proyecto.toLowerCase());
     Datos.escribirDatos(mydata,
-        url + "/src/com/" + nombre_proyecto.toLowerCase() + "/mvc/controllers/ControllerSyncronizarProyectos.java");
+        url + "/src/com/" + nombre_proyecto.toLowerCase() + "/mvc/controllers/ControllerProyectos.java");
 
     /* Escribir Marco por defecto */
-    url_origen = "bin/recursos/template/Marco.java";
+    url_origen = "bin/recursos/template/PrincipalView.java";
     mydata = Datos.leerData(url_origen);
     mydata = mydata.replaceAll(modificar, nombre_proyecto.toLowerCase());
-    Datos.escribirDatos(mydata, url + "/src/com/" + nombre_proyecto.toLowerCase() + "/mvc/views/Marco.java");
+    Datos.escribirDatos(mydata, url + "/src/com/" + nombre_proyecto.toLowerCase() + "/mvc/views/PrincipalView.java");
 
   }
 

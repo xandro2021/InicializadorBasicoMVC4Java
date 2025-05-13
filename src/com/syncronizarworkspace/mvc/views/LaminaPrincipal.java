@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class LaminaPrincipal extends JPanel {
@@ -53,8 +54,8 @@ public class LaminaPrincipal extends JPanel {
     JPanel celda2 = new JPanel();
     celda2.add(texto1);
 
-    JButton btn = new JButton();
-    btn.setIcon(new ImageIcon("bin/iconoCarpeta.png"));
+
+    JButton btn = new JButton("Buscar");
     btn.addActionListener(new AbrirFileExplorer(texto1));
     celda2.add(btn);
 

@@ -1,0 +1,33 @@
+.DS_Store
+.idea
+*.log
+tmp/
+
+*.class
+build
+
+# Archivos de salida de compilación
+bin/
+target/
+build/
+
+# Archivos de configuración específicos del usuario
+.settings/
+
+# Archivos temporales o de sistema
+*.log
+*.tmp
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Archivos de Eclipse opcionales (mantén .project y .classpath si querés que tus compas abran el proyecto directo)
+# Si no usaran Eclipse, podrías ignorarlos también.
+# .project
+# .classpath
+
+# Archivos de control de versiones propios de Emacs/Vim
+*~
+\#*\#
+.\#*
