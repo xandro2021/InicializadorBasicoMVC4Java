@@ -50,7 +50,7 @@ public class ControllerSyncronizarProyectos {
 
         crearEstructuraMVC(ruta_proyecto, url_origen);
 
-        Path origen = Paths.get("bin/recursos/copia");
+        Path origen = Paths.get("src/recursos/copia");
         copiarDirectorio(origen, ruta_proyecto);
 
         copiarArchivosTemplates(url_origen);
@@ -79,6 +79,12 @@ public class ControllerSyncronizarProyectos {
     url = url.concat("/mvc/");
 
     ruta_proyecto = Paths.get(url + "models");
+    Files.createDirectories(ruta_proyecto);
+
+    ruta_proyecto = Paths.get(url + "models/estructuradatos/listadoble");
+    Files.createDirectories(ruta_proyecto);
+
+    ruta_proyecto = Paths.get(url + "models/estructuradatos/listasimple");
     Files.createDirectories(ruta_proyecto);
 
     ruta_proyecto = Paths.get(url + "controllers");
@@ -146,7 +152,7 @@ public class ControllerSyncronizarProyectos {
 
   private void copiarArchivosTemplates(String url) {
     /* Escribir script run.sh */
-    String url_origen = "bin/recursos/template/run.sh";
+    String url_origen = "src/recursos/template/run.sh";
     String mydata = Datos.leerData(url_origen);
 
     String modificar = "syncronizarworkspace";
@@ -154,23 +160,45 @@ public class ControllerSyncronizarProyectos {
     Datos.escribirDatos(mydata, url + "/run.sh");
 
     /* Escribir el Main.java */
-    url_origen = "bin/recursos/template/Main.java";
+    url_origen = "src/recursos/template/Main.txt";
     mydata = Datos.leerData(url_origen);
     mydata = mydata.replaceAll(modificar, nombre_proyecto.toLowerCase());
     Datos.escribirDatos(mydata, url + "/src/com/" + nombre_proyecto.toLowerCase() + "/init/Main.java");
 
     /* Escribir template controller de nombre cambiante */
-    url_origen = "bin/recursos/template/ControllerProyectos.java";
+    url_origen = "src/recursos/template/ControllerProyectos.txt";
     mydata = Datos.leerData(url_origen);
     mydata = mydata.replaceAll(modificar, nombre_proyecto.toLowerCase());
     Datos.escribirDatos(mydata,
         url + "/src/com/" + nombre_proyecto.toLowerCase() + "/mvc/controllers/ControllerProyectos.java");
 
     /* Escribir Marco por defecto */
-    url_origen = "bin/recursos/template/PrincipalView.java";
+    url_origen = "src/recursos/template/PrincipalView.txt";
     mydata = Datos.leerData(url_origen);
     mydata = mydata.replaceAll(modificar, nombre_proyecto.toLowerCase());
     Datos.escribirDatos(mydata, url + "/src/com/" + nombre_proyecto.toLowerCase() + "/mvc/views/PrincipalView.java");
+
+    /* Escribir ListaDoble */
+    url_origen = "src/recursos/template/datastructures/listadoble/Nodo.txt";
+    mydata = Datos.leerData(url_origen);
+    mydata = mydata.replaceAll(modificar, nombre_proyecto.toLowerCase());
+    Datos.escribirDatos(mydata, url + "/src/com/" + nombre_proyecto.toLowerCase() + "/mvc/models/estructuradatos/listadoble/Nodo.java");
+
+    url_origen = "src/recursos/template/datastructures/listadoble/ListaDoble.txt";
+    mydata = Datos.leerData(url_origen);
+    mydata = mydata.replaceAll(modificar, nombre_proyecto.toLowerCase());
+    Datos.escribirDatos(mydata, url + "/src/com/" + nombre_proyecto.toLowerCase() + "/mvc/models/estructuradatos/listadoble/ListaDoble.java");
+
+    /* Escribir ListaSimple */
+    url_origen = "src/recursos/template/datastructures/listasimple/Nodo.txt";
+    mydata = Datos.leerData(url_origen);
+    mydata = mydata.replaceAll(modificar, nombre_proyecto.toLowerCase());
+    Datos.escribirDatos(mydata, url + "/src/com/" + nombre_proyecto.toLowerCase() + "/mvc/models/estructuradatos/listasimple/Nodo.java");
+
+    url_origen = "src/recursos/template/datastructures/listasimple/ListaSimple.txt";
+    mydata = Datos.leerData(url_origen);
+    mydata = mydata.replaceAll(modificar, nombre_proyecto.toLowerCase());
+    Datos.escribirDatos(mydata, url + "/src/com/" + nombre_proyecto.toLowerCase() + "/mvc/models/estructuradatos/listasimple/ListaSimple.java");
 
   }
 

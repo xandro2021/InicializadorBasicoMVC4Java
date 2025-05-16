@@ -1,0 +1,126 @@
+package com.syncronizarworkspace.mvc.models.estructuradatos.listasimple;
+
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+public class ListaSimple<T> {
+
+  protected Nodo<T> primero, ultimo;
+
+  public ListaSimple() {
+    primero = ultimo = null;
+  }
+
+  public boolean isEmpty() {
+    return primero == null;
+  }
+
+  public void store(T item) {
+    Nodo<T> nuevo = new Nodo<T>(item);
+
+    if (isEmpty()) {
+      primero = ultimo = nuevo;
+    } else {
+      ultimo.setSiguiente(nuevo);
+      ultimo = nuevo;
+    }
+  }
+
+  public void remove(Predicate<T> criterio) {
+    if (isEmpty()) {
+      return;
+    }
+
+    // Caso especial: el primero cumple
+    if (criterio.test(primero.getItem())) {
+      primero = primero.getSiguiente();
+      return;
+    }
+
+    Nodo<T> actual = primero;
+    while (actual != null && actual.getSiguiente() != null) {
+
+      Nodo<T> siguiente = actual.getSiguiente();
+
+      if (criterio.test(siguiente.getItem())) {
+        // Saltarse el nodo
+        actual.setSiguiente(siguiente.getSiguiente());
+
+        // Si eliminamos el último, actualizar 'ultimo'
+        if (siguiente == ultimo) {
+          ultimo = actual;
+        }
+
+        return;
+      }
+
+      actual = actual.getSiguiente();
+    }
+  }
+
+  @Override
+  public String toString() {
+    String data = "";
+    Nodo<T> aux = primero;
+
+    while (aux != null) {
+
+      data += aux.getItem() + "\n";
+
+      aux = aux.getSiguiente();
+    }
+
+    return data;
+  }
+
+  public void forEach(Consumer<T> action) {
+
+    for (Nodo<T> aux = primero; aux != null; aux = aux.getSiguiente()) {
+
+      action.accept(aux.getItem());
+
+    }
+
+  }
+
+  public <R> ListaSimple<R> map(Function<T, R> transformador) {
+
+    ListaSimple<R> resultado = new ListaSimple<>();
+
+    for (Nodo<T> aux = primero; aux != null; aux = aux.getSiguiente()) {
+
+      resultado.store(transformador.apply(aux.getItem()));
+
+    }
+
+    return resultado;
+  }
+
+  public ListaSimple<T> filter(Predicate<T> condicion) {
+
+    ListaSimple<T> lista_filtrada = new ListaSimple<>();
+
+    for (Nodo<T> aux = primero; aux != null; aux = aux.getSiguiente()) {
+
+      if (condicion.test(aux.getItem())) {
+        lista_filtrada.store(aux.getItem());
+      }
+
+    }
+
+    return lista_filtrada;
+  }
+
+  public <R> R reduce(R valorInicial, BiFunction<R, T, R> acumulador) {
+    R resultado = valorInicial;
+
+    for (Nodo<T> aux = primero; aux != null; aux = aux.getSiguiente()) {
+      resultado = acumulador.apply(resultado, aux.getItem());
+    }
+
+    return resultado;
+  }
+
+}

@@ -1,0 +1,207 @@
+package com.syncronizarworkspace.mvc.models.estructuradatos.listadoble;
+
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+public class ListaDoble<T> {
+
+  protected Nodo<T> primero, ultimo;
+
+  public ListaDoble() {
+    primero = ultimo = null;
+  }
+
+  public boolean isEmpty() {
+    return primero == null ? true : false;
+  }
+
+  public void store(T item) {
+
+    Nodo<T> nuevo = new Nodo<T>(item);
+
+    if (isEmpty()) {
+      primero = ultimo = nuevo;
+    } else {
+      ultimo.setSiguiente(nuevo);
+      nuevo.setAnterior(ultimo);
+      ultimo = nuevo;
+    }
+
+  }
+
+  public void delete(T item_eliminar) {
+    delete(item -> item.equals(item_eliminar));
+  }
+
+  public void delete(Predicate<T> condicion) {
+
+    Nodo<T> aux = primero;
+
+    while (aux != null) {
+      if (condicion.test(aux.getItem())) {
+
+        // Caso: nodo no es el primero
+        if (aux != primero) {
+          aux.getAnterior().setSiguiente(aux.getSiguiente());
+
+          if (aux.getSiguiente() != null) {
+            aux.getSiguiente().setAnterior(aux.getAnterior());
+          } else {
+            // si no hay siguiente, es el último
+            ultimo = aux.getAnterior();
+          }
+
+        } else {
+          // Caso: nodo es el primero
+          if (aux.getSiguiente() != null) {
+            aux.getSiguiente().setAnterior(null);
+            primero = aux.getSiguiente();
+          } else {
+            // si no hay siguiente, también es el único
+            primero = ultimo = null;
+          }
+
+          primero = aux.getSiguiente();
+        }
+
+        return; // salimos después de eliminar
+      }
+
+      aux = aux.getSiguiente();
+    }
+  }
+
+  @Override
+  public String toString() {
+
+    String data = "";
+
+    Nodo<T> aux = primero;
+
+    while (aux != null) {
+
+      data += "  " + aux.getItem() + "\n";
+
+      aux = aux.getSiguiente();
+    }
+
+    return data;
+  }
+
+  public T getFirst() {
+    return primero.getItem();
+  }
+
+  public T getLast() {
+    return ultimo.getItem();
+  }
+
+  // public T getFirst() {
+
+  // Nodo<T> elemento = primero;
+
+  // delete(primero.getItem());
+
+  // return elemento.getItem();
+  // }
+
+  // public void process() {
+
+  // Nodo<T> aux = primero;
+
+  // while (aux != null) {
+
+  // System.out.println(getFirst());
+
+  // aux = aux.getSiguiente();
+  // }
+
+  // }
+
+  public int getTotal(Function<T, Integer> funcion) {
+
+    int total = 0;
+
+    Nodo<T> aux = primero;
+
+    while (aux != null) {
+
+      total += funcion.apply(aux.getItem());
+
+      aux = aux.getSiguiente();
+    }
+
+    return total;
+  }
+
+  public <L extends ListaDoble<T>> L filter(Predicate<T> condicion, Supplier<L> supplier) {
+    L filtrada = supplier.get();
+
+    Nodo<T> aux = primero;
+
+    while (aux != null) {
+
+      if (condicion.test(aux.getItem())) {
+        filtrada.store(aux.getItem());
+      }
+
+      aux = aux.getSiguiente();
+    }
+
+    return filtrada;
+  }
+
+  public ListaDoble<T> filter(Predicate<T> condicion) {
+    ListaDoble<T> filtrada = new ListaDoble<>();
+
+    for (Nodo<T> aux = primero; aux != null; aux = aux.getSiguiente()) {
+      if (condicion.test(aux.getItem())) {
+        filtrada.store(aux.getItem());
+      }
+    }
+
+    return filtrada;
+  }
+
+  public void forEach(Consumer<T> action) {
+
+    Nodo<T> aux = primero;
+
+    while (aux != null) {
+
+      action.accept(aux.getItem());
+
+      aux = aux.getSiguiente();
+    }
+
+  }
+
+  public <R> ListaDoble<R> map(Function<T, R> transformador) {
+    ListaDoble<R> resultado = new ListaDoble<>();
+
+    Nodo<T> aux = primero;
+
+    while (aux != null) {
+
+      resultado.store(transformador.apply(aux.getItem()));
+
+      aux = aux.getSiguiente();
+    }
+
+    return resultado;
+  }
+
+  public <U> U reduce(U valorInicial, BiFunction<U, T, U> funcionAcumuladora) {
+    U resultado = valorInicial;
+
+    for (Nodo<T> aux = primero; aux != null; aux = aux.getSiguiente()) {
+      resultado = funcionAcumuladora.apply(resultado, aux.getItem());
+    }
+
+    return resultado;
+  }
+
+}
